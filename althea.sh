@@ -3,11 +3,11 @@
 #
 
 echo -e "\033[0;32m"
-echo "    ¦¦   ¦¦ ¦¦¦¦¦¦¦ ¦¦   ¦¦ ¦¦¦    ¦¦  ¦¦¦¦¦¦  ¦¦¦¦¦¦  ¦¦¦¦¦¦¦ ¦¦¦¦¦¦¦";
-echo "    ¦¦   ¦¦ ¦¦       ¦¦ ¦¦  ¦¦¦¦   ¦¦ ¦¦    ¦¦ ¦¦   ¦¦ ¦¦      ¦¦     "; 
-echo "    ¦¦¦¦¦¦¦ ¦¦¦¦¦     ¦¦¦   ¦¦ ¦¦  ¦¦ ¦¦    ¦¦ ¦¦   ¦¦ ¦¦¦¦¦   ¦¦¦¦¦¦¦"; 
-echo "    ¦¦   ¦¦ ¦¦       ¦¦ ¦¦  ¦¦  ¦¦ ¦¦ ¦¦    ¦¦ ¦¦   ¦¦ ¦¦           ¦¦"; 
-echo "    ¦¦   ¦¦ ¦¦¦¦¦¦¦ ¦¦   ¦¦ ¦¦   ¦¦¦¦  ¦¦¦¦¦¦  ¦¦¦¦¦¦  ¦¦¦¦¦¦¦ ¦¦¦¦¦¦¦";
+echo "    ██   ██ ███████ ██   ██ ███    ██  ██████  ██████  ███████ ███████";
+echo "    ██   ██ ██       ██ ██  ████   ██ ██    ██ ██   ██ ██      ██     "; 
+echo "    ███████ █████     ███   ██ ██  ██ ██    ██ ██   ██ █████   ███████"; 
+echo "    ██   ██ ██       ██ ██  ██  ██ ██ ██    ██ ██   ██ ██           ██"; 
+echo "    ██   ██ ███████ ██   ██ ██   ████  ██████  ██████  ███████ ███████";
 echo "        Automatic Installer for Althea  | Chain ID : althea_7357-1 ";
 echo -e "\e[0m"
 sleep 1
@@ -19,10 +19,10 @@ ALT_ID=althea_7357-1
 ALT_FOLDER=.althea
 ALT_REPO=https://github.com/althea-net/althea-chain.git
 ALT_VERSION=v0.3.2
-ALT_GENESIS=https://snapshots.kjnodes.com/althea-testnet/genesis.json
-ALT_ADDRBOOK=https://snapshots.kjnodes.com/althea-testnet/addrbook.json
+ALT_GENESIS=https://snap.hexnodes.co/althea/genesis.json
+ALT_ADDRBOOK=https://snap.hexnodes.co/althea/addrbook.json
 ALT_DENOM=ualthea
-ALT_PORT=14
+ALT_PORT=12
 
 echo "export ALT_WALLET=${ALT_WALLET}" >> $HOME/.bash_profile
 echo "export ALT=${ALT}" >> $HOME/.bash_profile
@@ -68,6 +68,7 @@ rm -rf althea-chain
 cd $HOME
 git clone $ALT_REPO
 cd althea-chain
+git checkout $ALT_VERSION
 make install
 
 $ALT config chain-id $ALT_ID
@@ -76,8 +77,8 @@ $ALT config node tcp://localhost:${ALT_PORT}657
 $ALT init $ALT_NODENAME --chain-id $ALT_ID
 
 # Set peers and seeds
-SEEDS=""
-PEERS="d5519e378247dfb61dfe90652d1fe3e2b3005a5b@althea-testnet.rpc.kjnodes.com:52656"
+SEEDS="26e70e13195b0d04cda0fca1f7b16b8746a620ed@65.109.28.226:24056"
+PEERS=""
 sed -i -e "s/^seeds *=.*/seeds = \"$SEEDS\"/; s/^persistent_peers *=.*/persistent_peers = \"$PEERS\"/" $HOME/$ALT_FOLDER/config/config.toml
 
 # Download genesis
@@ -86,7 +87,7 @@ curl -Ls $ALT_ADDRBOOK > $HOME/$ALT_FOLDER/config/addrbook.json
 
 # Set Port
 sed -i.bak -e "s%^proxy_app = \"tcp://127.0.0.1:26658\"%proxy_app = \"tcp://127.0.0.1:${ALT_PORT}658\"%; s%^laddr = \"tcp://127.0.0.1:26657\"%laddr = \"tcp://127.0.0.1:${ALT_PORT}657\"%; s%^pprof_laddr = \"localhost:6060\"%pprof_laddr = \"localhost:${ALT_PORT}060\"%; s%^laddr = \"tcp://0.0.0.0:26656\"%laddr = \"tcp://0.0.0.0:${ALT_PORT}656\"%; s%^prometheus_listen_addr = \":26660\"%prometheus_listen_addr = \":${ALT_PORT}660\"%" $HOME/$ALT_FOLDER/config/config.toml
-sed -i.bak -e "s%^address = \"tcp://0.0.0.0:1317\"%address = \"tcp://0.0.0.0:${ALT_PORT}317\"%; s%^address = \":8080\"%address = \":${ALT_PORT}080\"%; s%^address = \"0.0.0.0:9090\"%address = \"0.0.0.0:${ALT_PORT}090\"%; s%^address = \"0.0.0.0:9091\"%address = \"0.0.0.0:${ALT_PORT}091\"%" $HOME/$ALT_FOLDER/config/app.toml
+sed -i.bak -e "s%^address = \"tcp://0.0.0.0:1317\"%address = \"tcp://0.0.0.0:${ALT_PORT}317\"%; s%^address = \":8080\"%address = \":${ALT_PORT}080\"%; s%^address = \"0.0.0.0:9090\"%address = \"0.0.0.0:${ALT_PORT}090\"%; s%^address = \"0.0.0.0:9091\"%address = \"0.0.0.0:${ALT_PORT}091\"%; s%^address = \"0.0.0.0:8545\"%address = \"0.0.0.0:${ALT_PORT}545\"%; s%^ws-address = \"0.0.0.0:8546\"%ws-address = \"0.0.0.0:${ALT_PORT}546\"%" $HOME/$ALT_FOLDER/config/app.toml
 
 # Set Config Pruning
 pruning="custom"
@@ -107,18 +108,7 @@ sed -i -e "s/^snapshot-keep-recent *=.*/snapshot-keep-recent = \"5\"/" $HOME/$AL
 
 # Enable Snapshot
 $ALT tendermint unsafe-reset-all --home $HOME/$ALT_FOLDER --keep-addr-book
-STATE_SYNC_RPC=https://althea-testnet.rpc.kjnodes.com:443
-LATEST_HEIGHT=$(curl -s $STATE_SYNC_RPC/block | jq -r .result.block.header.height)
-SYNC_BLOCK_HEIGHT=$(($LATEST_HEIGHT - 2000))
-SYNC_BLOCK_HASH=$(curl -s "$STATE_SYNC_RPC/block?height=$SYNC_BLOCK_HEIGHT" | jq -r .result.block_id.hash)
-
-sed -i \
-  -e "s|^enable *=.*|enable = true|" \
-  -e "s|^rpc_servers *=.*|rpc_servers = \"$STATE_SYNC_RPC,$STATE_SYNC_RPC\"|" \
-  -e "s|^trust_height *=.*|trust_height = $SYNC_BLOCK_HEIGHT|" \
-  -e "s|^trust_hash *=.*|trust_hash = \"$SYNC_BLOCK_HASH\"|" \
-  -e "s|^persistent_peers *=.*|persistent_peers = \"$STATE_SYNC_PEER\"|" \
-  $HOME/.althea/config/config.toml
+curl -L https://snap.hexnodes.co/althea/althea.latest.tar.lz4 | tar -Ilz4 -xf - -C $HOME/$ALT_FOLDER
 
 # Create Service
 sudo tee /etc/systemd/system/$ALT.service > /dev/null <<EOF
