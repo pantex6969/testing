@@ -71,6 +71,7 @@ cd ixo-blockchain
 git checkout $IXO_VERSION
 make install
 
+# Init
 $IXO config chain-id $IXO_ID
 $IXO config keyring-backend file
 $IXO config node tcp://localhost:${IXO_PORT}657
